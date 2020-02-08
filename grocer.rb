@@ -28,9 +28,6 @@ def consolidate_cart(cart:[])
 end
 
 def apply_coupons(cart:[], coupons:[])
-  # code here
-end
-   # code here
    app_coupon = {}
    cart.each do |item, attributes|
      coupons.each do |coupon|
