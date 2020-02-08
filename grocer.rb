@@ -16,7 +16,9 @@ def consolidate_cart(cart:[])
     if new_cart_item != NIL
       new_cart_item[:count] += 1
     else
-      new_cart_item = []
+      new_cart_item = {
+        
+      }
 end
 
 def apply_coupons(cart:[], coupons:[])
