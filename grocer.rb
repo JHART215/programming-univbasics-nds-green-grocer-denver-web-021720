@@ -9,42 +9,71 @@ def find_item_by_name_in_collection(name, collection)
 end
 
 def consolidate_cart(cart:[])
-	cart.each_with_object({}) do |item, consolidated|
-		item_name = item.keys.first
-		if consolidated[item_name]
-			consolidated[item_name][:count] += 1
-		else
-			consolidated[item_name] = {
-				price: item[item_name][:price],
-				clearance: item[item_name][:clearance],
-				count: 1
-			}
-		end
-	end
+  # code here
+   # code here
+  conso_cart = {}
+
+  cart.each do |item|
+    item.each do |k,v|
+      if conso_cart.keys.include?(k) == false
+        conso_cart[k] = v
+        conso_cart[k][:count] = 1
+      else 
+        counter = conso_cart[k][:count] + 1
+        conso_cart[k][:count] = counter 
+      end
+    end
+  end
+  conso_cart
 end
 
+def apply_coupons(cart:[], coupons:[])
+  # code here
+end
+   # code here
+   app_coupon = {}
+   cart.each do |item, attributes|
+     coupons.each do |coupon|
+       if coupon[:item] == item && attributes[:count] >= coupon[:num]
+         if !app_coupon.has_key?("#{item} W/COUPON")
+           app_coupon["#{item} W/COUPON"] = {
+             price: coupon[:cost],
+             clearance: attributes[:clearance],
+             count: 0}
+         end
+         app_coupon["#{item} W/COUPON"][:count] += 1
+         attributes[:count] -= coupon[:num]
+       end
+     end
+   end
+   cart.merge!(app_coupon)
+  end
+
+
+def apply_clearance(cart:[])
+  # code here
+   # code here
+  app_clear = {}
+  cart.each do |item_name, value|
+     app_clear[item_name] = value
+      if value[:clearance] == true
+        value[:price] = (value[:price] * 0.8).round(2)
+      end
+  end
+  app_clear
+end
+
+
 def checkout(cart: [], coupons: [])
-	new_cart = consolidate_cart(cart: cart)
-	total = 0
-	new_cart.each_pair do |item, properties|
-		sub_total = 0
-		if coupon = coupons.find {|coupon| coupon[:item] == item }
-			if coupon[:num] <= properties[:count]
-				properties[:count] -= coupon[:num]
-				sub_total += coupon[:cost]
-			end
-		end
+  # code here
+end 
+  total = 0 
+  cart = apply_clearance(cart: apply_coupons(cart: consolidate_cart(cart: cart), 
+                         coupons: coupons))
+  cart.each do |item_name, value|
+     total += value[:price] * value[:count]
+  end
 
-		sub_total += properties[:price] * properties[:count]
-		if properties[:clearance]
-			sub_total = sub_total - (sub_total * 0.20)
-		end
-
-		if sub_total > 100
-			sub_total = sub_total - (sub_total * 0.10)
-		end
-
-		total += sub_total
-	end
-	total
+  total = (total * 0.9).round(2) if total >= 100
+  total
 end
