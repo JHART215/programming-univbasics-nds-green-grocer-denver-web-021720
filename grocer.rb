@@ -48,7 +48,7 @@ end
    end
    cart.merge!(app_coupon)
   end
-
+end
 
 def apply_clearance(cart:[])
   # code here
