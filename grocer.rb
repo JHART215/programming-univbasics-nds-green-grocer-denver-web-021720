@@ -30,23 +30,8 @@ def consolidate_cart(cart:[])
 end
 
 def apply_coupons(cart:[], coupons:[])
-   app_coupon = {}
-   cart.each do |item, attributes|
-     coupons.each do |coupon|
-       if coupon[:item] == item && attributes[:count] >= coupon[:num]
-         if !app_coupon.has_key?("#{item} W/COUPON")
-           app_coupon["#{item} W/COUPON"] = {
-             price: coupon[:cost],
-             clearance: attributes[:clearance],
-             count: 0}
-         end
-         app_coupon["#{item} W/COUPON"][:count] += 1
-         attributes[:count] -= coupon[:num]
-       end
-     end
-   end
-   cart.merge!(app_coupon)
-  end
+   
+end
 
 def apply_clearance(cart:[])
   app_clear = {}
