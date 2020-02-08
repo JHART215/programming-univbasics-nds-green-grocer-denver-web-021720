@@ -8,50 +8,43 @@ def find_item_by_name_in_collection(name, collection)
   end
 end
 
-def consolidate_cart(cart: [])
-  container = {}
-  cart.each do |item_hash|
-    item_hash.each do |name, value_hash|
-      unless container[name] 
-        container[name] = value_hash
-        container[name][:count] = 0
-      end
-      container[name][:count] += 1
-    end
-  end
-  container 
-end
-
-def apply_coupons(cart: [], coupons: [])
-  couponed_items= {}
-  coupons.each do |coupon_hash|
-    cart.each do |name, item_hash|
-      if name == coupon_hash[:item] && item_hash[:count] >= coupon_hash[:num]
-        item_hash[:count] = item_hash[:count] - coupon_hash[:num]
-        new_name = coupon_hash[:item] + " w/coupon"
-        couponed_items[new_name] = { :price => coupon_hash[:cost], 
-                                     :count => 1, 
-                                     :clearance => item_hash[:clearance] }
-      end 
-    end
-  end
-  cart.merge(couponed_items)
+def consolidate_cart(cart:[])
+	cart.each_with_object({}) do |item, consolidated|
+		item_name = item.keys.first
+		if consolidated[item_name]
+			consolidated[item_name][:count] += 1
+		else
+			consolidated[item_name] = {
+				price: item[item_name][:price],
+				clearance: item[item_name][:clearance],
+				count: 1
+			}
+		end
+	end
 end
 
 def checkout(cart: [], coupons: [])
-  puts cart.inspect
-  call_later = cart
-  cart = consolidate_cart(cart: cart)
-  final_cart = apply_coupons(cart: cart, coupons: coupons)
-  total = 0
-  final_cart.each do |name, item_hash|
-    if item_hash[:clearance]
-      item_hash[:price] = item_hash[:price] - (item_hash[:price] * 0.20)
-    end
-    total += item_hash[:price] * item_hash[:count]
-  end
-  if total > 100
-    total = total - ( total * 0.10 )
-  end
-  total
+	new_cart = consolidate_cart(cart: cart)
+	total = 0
+	new_cart.each_pair do |item, properties|
+		sub_total = 0
+		if coupon = coupons.find {|coupon| coupon[:item] == item }
+			if coupon[:num] <= properties[:count]
+				properties[:count] -= coupon[:num]
+				sub_total += coupon[:cost]
+			end
+		end
+
+		sub_total += properties[:price] * properties[:count]
+		if properties[:clearance]
+			sub_total = sub_total - (sub_total * 0.20)
+		end
+
+		if sub_total > 100
+			sub_total = sub_total - (sub_total * 0.10)
+		end
+
+		total += sub_total
+	end
+	total
 end
