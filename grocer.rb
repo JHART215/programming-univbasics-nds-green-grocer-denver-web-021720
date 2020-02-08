@@ -9,19 +9,7 @@ def find_item_by_name_in_collection(name, collection)
 end
 
 def consolidate_cart(cart:[])
-  conso_cart = {}
-  cart.each do |item|
-    item.each do |k,v|
-      if conso_cart.keys.include?(k) == false
-        conso_cart[k] = v
-        conso_cart[k][:count] = 1
-      else 
-        counter = conso_cart[k][:count] + 1
-        conso_cart[k][:count] = counter 
-      end
-    end
-  end
-  conso_cart
+  new_cart = 
 end
 
 def apply_coupons(cart:[], coupons:[])
