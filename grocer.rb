@@ -9,10 +9,7 @@ def find_item_by_name_in_collection(name, collection)
 end
 
 def consolidate_cart(cart:[])
-  # code here
-   # code here
   conso_cart = {}
-
   cart.each do |item|
     item.each do |k,v|
       if conso_cart.keys.include?(k) == false
@@ -47,8 +44,6 @@ def apply_coupons(cart:[], coupons:[])
   end
 
 def apply_clearance(cart:[])
-  # code here
-   # code here
   app_clear = {}
   cart.each do |item_name, value|
      app_clear[item_name] = value
@@ -61,8 +56,6 @@ end
 
 
 def checkout(cart: [], coupons: [])
-  # code here
-end 
   total = 0 
   cart = apply_clearance(cart: apply_coupons(cart: consolidate_cart(cart: cart), 
                          coupons: coupons))
