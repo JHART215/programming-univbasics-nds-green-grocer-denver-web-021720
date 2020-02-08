@@ -20,7 +20,7 @@ def consolidate_cart(cart:[])
         :item
         :price
         :clearance
-        :
+        :count = 1
       }
 end
 
