@@ -35,7 +35,8 @@ def apply_coupons(cart, coupons)
     cart_item = find_item_by_name_in_collection(coupons[counter][:item], cart)
     couponed_item_name = "#{coupons[counter][:item]} W/COUPON"
     cart_item_with_coupon = find_item_by_name_in_collection(couponed_item_name, cart)
-    
+    if cart_item && cart_item[:count] >= coupons[counter][:num]
+      
     counter += 1
   end
 end
@@ -61,7 +62,7 @@ def checkout(cart, coupons)
   counter = 0
   while counter < final_cart.length
     total += final_cart[counter][:price] * final_cart[counter][:count]
-    counter =+ 1
+    counter += 1
   end
   if total > 100
     total -= (total * 0.1)
